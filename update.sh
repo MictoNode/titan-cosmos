@@ -4,7 +4,7 @@
 cd ~ || exit
 
 # Stop old titan program
-systemctl stop titand
+systemctl stop titan
 
 # Back up the .titan directory. If something goes wrong in the middle, you can use the backup to restore and then execute again.
 mv ~/.titan ~/titan_bak_08_08_02
@@ -49,4 +49,4 @@ node = "tcp://localhost:29657"
 # Transaction broadcasting mode (sync|async)
 broadcast-mode = "sync"' > ~/.titan/config/client.toml
 
-systemctl start titand
+systemctl start titan
