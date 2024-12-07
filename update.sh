@@ -4,7 +4,7 @@
 cd ~ || exit
 
 # Stop old titan program
-systemctl stop titan
+sudo systemctl stop titan
 
 # Back up the .titan directory. If something goes wrong in the middle, you can use the backup to restore and then execute again.
 mv ~/.titan ~/titan_bak_08_08_02
@@ -30,6 +30,24 @@ echo '{
   "step": 0
 }' > ~/.titan/data/priv_validator_state.json
 
+rm -rf titan-chain
+git clone https://github.com/Titannet-dao/titan-chain.git
+sleep 5
+cd titan-chain
+git fetch origin
+sleep 5
+git checkout origin/main
+sleep 5
+go build ./cmd/titand
+sleep 5
+mv /root/titan-chain/titand /root/.titan/cosmovisor/genesis/bin/
+sleep 5
+sudo ln -sfn $HOME/.titan/cosmovisor/genesis $HOME/.titan/cosmovisor/current
+sleep 5
+sudo ln -sfn $HOME/.titan/cosmovisor/current/bin/titand /usr/local/bin/titand
+sleep 5
+sudo systemctl daemon-reload
+
 # Update config/client.toml chain-id
 echo '# This is a TOML config file.
 # For more information, see https://github.com/toml-lang/toml
@@ -49,4 +67,4 @@ node = "tcp://localhost:29657"
 # Transaction broadcasting mode (sync|async)
 broadcast-mode = "sync"' > ~/.titan/config/client.toml
 
-systemctl start titan
+sudo systemctl start titan
